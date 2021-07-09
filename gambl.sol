@@ -45,4 +45,33 @@ library OveflowMath {
         return totalValue;
     }
 
+    function sub(uint256 valueA, uint256 valueB) internal pure returns (uint256) {
+        return sub(valueA, valueB, "Error: there was a subtraction overflow.");
+    }
+
+    function sub(uint256 valueA, uint256 valueB, string memory errorMessage) internal pure returns (uint256) {
+        require(valueB <= valueA, errorMessage);
+        uint256 totalValue = valueA - valueB;
+        return totalValue;
+    }
+
+    function mul(uint256 valueA, uint256 valueB) internal pure returns (uint256) {
+        if (valueA == 0) {
+            return 0;
+        }
+        uint256 totalValue = valueA * valueB;
+        require(totalValue / valueA == valueB, "Error: there was a multiplication overflow.");
+        return totalValue;
+    }
+    
+    function div(uint256 valueA, uint256 valueB) internal pure returns (uint256) {
+        return div(valueA, valueB, "Error: you cannot divide by zero.");
+    }
+
+    function div(uint256 valueA, uint256 valueB, string memory errorMessage) internal pure returns (uint256) {
+        require(valueB > 0, errorMessage);
+        uint256 totalValue = valueA / valueB;
+        return totalValue;
+    }
+
 }
