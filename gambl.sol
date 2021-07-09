@@ -74,4 +74,26 @@ library OveflowMath {
         return totalValue;
     }
 
+    function mod(uint256 valueA, uint256 valueB) internal pure returns (uint256) {
+        return mod(valueA, valueB, "Error: cannot revert by zero.");
+    }
+
+    function mod(uint256 valueA, uint256 valueB, string memory errorMessage) internal pure returns (uint256) {
+        require(valueB != 0, errorMessage);
+        return valueA % valueB;
+    }
+
+}
+
+abstract contract Context {
+
+    function _msgSender() internal view virtual returns (address payable) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes memory) {
+        this;
+        return msg.data;
+    }
+
 }
