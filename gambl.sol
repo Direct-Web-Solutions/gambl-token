@@ -148,3 +148,71 @@ library Address {
     }
 
 }
+
+contract Ownable is Context {
+
+    address private _owner;
+    address private _previousOwner;
+    uint256 private _lockTime;
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    constructor () internal {
+        address msgSender = _msgSender();
+        _owner = msgSender;
+        emit OwnershipTransferred(address(0), msgSender);
+    }
+
+    function owner() public view returns (address) {
+        return _owner;
+    }
+
+    modifier onlyOwner() {
+        require(_owner == _msgSender(), "Error: Only the contract owner can call this function.");
+        _;
+    }
+
+    function renounceOwnership() public virtual onlyOwner {
+        emit OwnershipTransferred(_owner, address(0));
+        _owner = address(0);
+    }
+
+    function transferOwnership(address newOwner) public virtual onlyOwner {
+        require(newOwner != address(0), "Notice: The contract is currently set to the Zero Address as owner.");
+        emit OwnershipTransferred(_owner, newOwner);
+        _owner = newOwner;
+    }
+
+    function geUnlockTime() public view returns (uint256) {
+        return _lockTime;
+    }
+
+    function lock(uint256 time) public virtual onlyOwner {
+        _previousOwner = _owner;
+        _owner = address(0);
+        _lockTime = now + time;
+        emit OwnershipTransferred(_owner, address(0));
+    }
+
+    function unlock() public virtual {
+        require(_previousOwner == msg.sender, "Error: You don't have permission to unlock.");
+        require(now > _lockTime , "Error: Contract is currently locked for " + geUnlockTime() + "  seconds.");
+        emit OwnershipTransferred(_owner, _previousOwner);
+        _owner = _previousOwner;
+    }
+
+}
+
+interface IUniswapV2Factory {
+
+    function feeTo() external view returns (address);
+    function feeToSetter() external view returns (address);
+    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    function allPairs(uint) external view returns (address pair);
+    function allPairsLength() external view returns (uint);
+    function createPair(address tokenA, address tokenB) external returns (address pair);
+    function setFeeTo(address) external;
+    function setFeeToSetter(address) external;
+
+    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
+
+}
