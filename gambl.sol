@@ -295,4 +295,22 @@ contract GAMBL is Context, IERC20, Ownable {
     using OveflowMath for uint256;
     using Address for address;
     
+    mapping (address => uint256) private _rOwned;
+    mapping (address => uint256) private _tOwned;
+    mapping (address => mapping (address => uint256)) private _allowances;
+    mapping (address => bool) private _isExcludedFromFee;
+    mapping (address => bool) private _isExcluded;
+    address[] private _excluded;
+   
+    uint256 private constant MAX = ~uint256(0);
+    uint256 private _tTotal = 1000000000 * 10**6;
+    uint256 private _rTotal = (MAX - (MAX % _tTotal));
+    uint256 private _tFeeTotal;
+    uint8 private _decimals = 9;
+    string private _name = "GAMBL";
+    string private _symbol = "GAMBL";
+
+    IUniswapV2Router02 public immutable uniswapV2Router;
+    address public immutable uniswapV2Pair;
+
 }
